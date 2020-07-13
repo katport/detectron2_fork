@@ -86,17 +86,17 @@ def mask_rcnn_loss(pred_mask_logits, instances, vis_period=0):
     )
     false_negative = (mask_incorrect & gt_masks_bool).sum().item() / max(num_positive, 1.0)
 
-    storage = get_event_storage()
-    storage.put_scalar("mask_rcnn/accuracy", mask_accuracy)
-    storage.put_scalar("mask_rcnn/false_positive", false_positive)
-    storage.put_scalar("mask_rcnn/false_negative", false_negative)
-    if vis_period > 0 and storage.iter % vis_period == 0:
-        pred_masks = pred_mask_logits.sigmoid()
-        vis_masks = torch.cat([pred_masks, gt_masks], axis=2)
-        name = "Left: mask prediction;   Right: mask GT"
-        for idx, vis_mask in enumerate(vis_masks):
-            vis_mask = torch.stack([vis_mask] * 3, axis=0)
-            storage.put_image(name + f" ({idx})", vis_mask)
+    # storage = get_event_storage()
+    # storage.put_scalar("mask_rcnn/accuracy", mask_accuracy)
+    # storage.put_scalar("mask_rcnn/false_positive", false_positive)
+    # storage.put_scalar("mask_rcnn/false_negative", false_negative)
+    # if vis_period > 0 and storage.iter % vis_period == 0:
+    #     pred_masks = pred_mask_logits.sigmoid()
+    #     vis_masks = torch.cat([pred_masks, gt_masks], axis=2)
+    #     name = "Left: mask prediction;   Right: mask GT"
+    #     for idx, vis_mask in enumerate(vis_masks):
+    #         vis_mask = torch.stack([vis_mask] * 3, axis=0)
+    #         storage.put_image(name + f" ({idx})", vis_mask)
 
     mask_loss = F.binary_cross_entropy_with_logits(pred_mask_logits, gt_masks, reduction="mean")
     return mask_loss

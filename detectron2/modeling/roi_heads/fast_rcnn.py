@@ -204,12 +204,12 @@ class FastRCNNOutputs(object):
         num_accurate = (pred_classes == self.gt_classes).nonzero().numel()
         fg_num_accurate = (fg_pred_classes == fg_gt_classes).nonzero().numel()
 
-        storage = get_event_storage()
-        if num_instances > 0:
-            storage.put_scalar("fast_rcnn/cls_accuracy", num_accurate / num_instances)
-            if num_fg > 0:
-                storage.put_scalar("fast_rcnn/fg_cls_accuracy", fg_num_accurate / num_fg)
-                storage.put_scalar("fast_rcnn/false_negative", num_false_negative / num_fg)
+        # storage = get_event_storage()
+        # if num_instances > 0:
+        #     storage.put_scalar("fast_rcnn/cls_accuracy", num_accurate / num_instances)
+        #     if num_fg > 0:
+        #         storage.put_scalar("fast_rcnn/fg_cls_accuracy", fg_num_accurate / num_fg)
+        #         storage.put_scalar("fast_rcnn/false_negative", num_false_negative / num_fg)
 
     def softmax_cross_entropy_loss(self):
         """

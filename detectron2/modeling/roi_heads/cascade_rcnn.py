@@ -125,7 +125,7 @@ class CascadeROIHeads(StandardROIHeads):
 
         if self.training:
             losses = {}
-            storage = get_event_storage()
+            # storage = get_event_storage()
             for stage, (predictor, predictions, proposals) in enumerate(head_outputs):
                 with storage.name_scope("stage{}".format(stage)):
                     stage_losses = predictor.losses(predictions, proposals)
