@@ -106,8 +106,8 @@ class GeneralizedRCNN(nn.Module):
         """
         if not self.training:
             return self.inference(batched_inputs)
-        print ('len of batched_inputs: ', batched_inputs)
-        
+        print ('len of batched_inputs: ', len(batched_inputs))
+
         images = self.preprocess_image(batched_inputs)
         if "instances" in batched_inputs[0]:
             gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
