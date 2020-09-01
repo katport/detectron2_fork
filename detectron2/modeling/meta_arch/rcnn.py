@@ -109,12 +109,12 @@ class GeneralizedRCNN(nn.Module):
 
         images = self.preprocess_image(batched_inputs)
         if "instances" in batched_inputs[0]:
-            gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
+            gt_instances = [x["instances"] for x in batched_inputs] #.to(self.device)
         elif "targets" in batched_inputs[0]:
             log_first_n(
                 logging.WARN, "'targets' in the model inputs is now renamed to 'instances'!", n=10
             )
-            gt_instances = [x["targets"].to(self.device) for x in batched_inputs]
+            gt_instances = [x["targets"] for x in batched_inputs] # .to(self.device)
         else:
             gt_instances = None
 
@@ -124,7 +124,7 @@ class GeneralizedRCNN(nn.Module):
             proposals, proposal_losses = self.proposal_generator(images, features, gt_instances)
         else:
             assert "proposals" in batched_inputs[0]
-            proposals = [x["proposals"].to(self.device) for x in batched_inputs]
+            proposals = [x["proposals"] for x in batched_inputs] #.to(self.device)
             proposal_losses = {}
 
         _, detector_losses = self.roi_heads(images, features, proposals, gt_instances)
@@ -165,11 +165,11 @@ class GeneralizedRCNN(nn.Module):
                 proposals, _ = self.proposal_generator(images, features, None)
             else:
                 assert "proposals" in batched_inputs[0]
-                proposals = [x["proposals"].to(self.device) for x in batched_inputs]
+                proposals = [x["proposals"] for x in batched_inputs] #.to(self.device)
 
             results, _ = self.roi_heads(images, features, proposals, None)
         else:
-            detected_instances = [x.to(self.device) for x in detected_instances]
+            detected_instances = [x for x in detected_instances] #.to(self.device)
             results = self.roi_heads.forward_with_given_boxes(features, detected_instances)
 
         if do_postprocess:
@@ -181,7 +181,7 @@ class GeneralizedRCNN(nn.Module):
         """
         Normalize, pad and batch the input images.
         """
-        images = [x["image"].to(self.device) for x in batched_inputs]
+        images = [x["image"] for x in batched_inputs] #.to(self.device)
         images = [(x - self.pixel_mean) / self.pixel_std for x in images]
         images = ImageList.from_tensors(images, self.backbone.size_divisibility)
         return images
@@ -228,18 +228,18 @@ class ProposalNetwork(nn.Module):
                 The dict contains one key "proposals" whose value is a
                 :class:`Instances` with keys "proposal_boxes" and "objectness_logits".
         """
-        images = [x["image"].to(self.device) for x in batched_inputs]
+        images = [x["image"] for x in batched_inputs] #.to(self.device)
         images = [(x - self.pixel_mean) / self.pixel_std for x in images]
         images = ImageList.from_tensors(images, self.backbone.size_divisibility)
         features = self.backbone(images.tensor)
 
         if "instances" in batched_inputs[0]:
-            gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
+            gt_instances = [x["instances"] for x in batched_inputs] #.to(self.device)
         elif "targets" in batched_inputs[0]:
             log_first_n(
                 logging.WARN, "'targets' in the model inputs is now renamed to 'instances'!", n=10
             )
-            gt_instances = [x["targets"].to(self.device) for x in batched_inputs]
+            gt_instances = [x["targets"] for x in batched_inputs] #.to(self.device)
         else:
             gt_instances = None
         proposals, proposal_losses = self.proposal_generator(images, features, gt_instances)
