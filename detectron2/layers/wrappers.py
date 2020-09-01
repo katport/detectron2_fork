@@ -89,7 +89,7 @@ class Conv2d(torch.nn.Conv2d):
                 return empty + _dummy
             else:
                 return empty
-
+        print ('wrappers forward x: ', x[0])
         x = super().forward(x)
         if self.norm is not None:
             x = self.norm(x)

@@ -198,6 +198,7 @@ class BottleneckBlock(CNNBlockBase):
         # Add it as an option when we need to use this code to train a backbone.
 
     def forward(self, x):
+        print ('resenet: ', x)
         out = self.conv1(x)
         out = F.relu_(out)
 

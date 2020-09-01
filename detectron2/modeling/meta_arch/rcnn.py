@@ -118,6 +118,7 @@ class GeneralizedRCNN(nn.Module):
         else:
             gt_instances = None
 
+        print ('grcnn: ', images.tensor)
         features = self.backbone(images.tensor)
 
         if self.proposal_generator:
